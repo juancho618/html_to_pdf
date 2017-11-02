@@ -1,0 +1,15 @@
+{
+  "name": "html_to_pdf",
+  "version": "0.0.1",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Juan Jose Soriano",
+  "license": "ISC",
+  "dependencies": {
+    "html-pdf": "^2.2.0"
+  }
+}
