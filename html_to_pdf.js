@@ -1,6 +1,6 @@
 const fs = require('fs');
 const pdf = require('html-pdf');
-const path = './htmlFiles/'
+const path = './htmlFiles/';
 const options = { format: 'Letter' };
 
 fs.readdir( path, (err, items) => {
