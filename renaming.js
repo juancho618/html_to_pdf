@@ -1,5 +1,5 @@
 const fs = require('fs');
-const path = './pdfFiles/';
+const path = './pdfFiles/'; //test path
 
 fs.readdir( path, (err, items) => {
     if (items.length > 0) {
