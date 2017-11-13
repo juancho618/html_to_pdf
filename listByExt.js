@@ -1,7 +1,7 @@
 const path = require('path'), 
       fs =  require('fs');
 
-fs.readdir('H:/USER/Jobstudents/powers/', (err, files) => {
+fs.readdir('H:/USER/Jobstudents/powers/HtmltoPdf', (err, files) => {
     let htmlFiles = files.filter(file => file.substr(-5) == '.html');
     let deletedFiles = htmlFiles.join(';');
     fs.writeFile('./deletedList.csv', deletedFiles, 'utf8', function (err) {
