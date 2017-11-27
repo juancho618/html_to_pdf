@@ -1,3 +1,7 @@
+/**
+ * Validates the data on the created folders and generates an Excel file.
+ */
+
 const path = require('path');
 const fs = require('fs.extra');
 const XLSX = require('xlsx');

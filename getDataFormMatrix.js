@@ -1,3 +1,7 @@
+/**
+ * Gets the data of de CPA's, DoT's and from the powers of different companies and create the folders per assignor.
+ */
+
 const path = require('path')
 const fs = require('fs.extra')
 const XLSX = require('xlsx')
@@ -23,13 +27,14 @@ let getList = (path) =>  fs.readdirAsync( path );
 
 const CPA = getList('H:\\USER\\Jobstudents\\CPAs');
 const DoT = getList('H:\\USER\\Jobstudents\\DoTs\\DoT_2sig_Stamped');
+const DoTo = getList('H:\\USER\\Jobstudents\\DoTs\\Dot_o_Stamped');
 const powers = getList('H:\\USER\\Jobstudents\\powersList')
 // const HtmltoPDF = getList('H:\\USER\\Jobstudents\\powers\\HtmltoPDF');
 // const ocrError = getList('H:\\USER\\Jobstudents\\powers\\OCR-PDF-A\\error');
 // const ocrGodd =  getList('H:\\USER\\Jobstudents\\powers\\OCR-PDF-A\\good');
 // const ocrToBe =  getList('H:\\USER\\Jobstudents\\powers\\OCR-PDF-A\\to be converted');
 
-Promise.all([CPA, DoT, powers]).then( values =>{
+Promise.all([CPA, DoT, powers, DoTo]).then( values =>{
     // creating the folders
     const destination = 'H:\\USER\\Jobstudents\\DocumentsList';
     
@@ -72,6 +77,12 @@ Promise.all([CPA, DoT, powers]).then( values =>{
         values[1].forEach(d => {
             if (d.includes(extractId)) {
                 fs.copy('H:\\USER\\Jobstudents\\DoTs\\DoT_2sig_Stamped' + '/' + d, `${savePath}/${d}`, { replace: false });
+            }
+        })
+        // DoT_o_Stamped
+        values[3].forEach(d => {
+            if (d.includes(extractId)) {
+                fs.copy('H:\\USER\\Jobstudents\\Dot_o_Stamped' + '/' + d, `${savePath}/${d}`, { replace: false });
             }
         })
 
