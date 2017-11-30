@@ -2,9 +2,9 @@
  * Gets the data of de CPA's, DoT's and from the powers of different companies and create the folders per assignor.
  */
 
-const path = require('path')
-const fs = require('fs.extra')
-const XLSX = require('xlsx')
+const path = require('path');
+const fs = require('fs.extra');
+const XLSX = require('xlsx');
 const workbook = XLSX.readFile('trucks contracts matrix (mail merge source).xlsm');
 const sheet_name_list = workbook.SheetNames;
 let xlData = XLSX.utils.sheet_to_json(workbook.Sheets["Tabelle1"]);
@@ -82,7 +82,7 @@ Promise.all([CPA, DoT, powers, DoTo]).then( values =>{
         // DoT_o_Stamped
         values[3].forEach(d => {
             if (d.includes(extractId)) {
-                fs.copy('H:\\USER\\Jobstudents\\Dot_o_Stamped' + '/' + d, `${savePath}/${d}`, { replace: false });
+                fs.copy('H:\\USER\\Jobstudents\\DoTs\\Dot_o_Stamped' + '/' + d, `${savePath}/${d}`, { replace: false });
             }
         })
 
