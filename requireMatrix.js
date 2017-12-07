@@ -19,7 +19,6 @@ const req = http.request(options, (res) =>{
     let data='';
     res.on('data', (chunk) => {
         data+=chunk;
-        //console.log(`BODY: ${chunk}`);
       });
       res.on('end', () => {
         console.log(data);

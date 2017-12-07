@@ -23,21 +23,14 @@ const assignorsList = getList('H:\\USER\\Jobstudents\\DocumentsList');
 
 Promise.all([assignorsList]).then(result =>{
     result[0].forEach( (r, index) => { // for each folder in the documents
-        return  getList('H:\\USER\\Jobstudents\\DocumentsList\\' + r).then( documents => { //get all the documets per assignor
-            let count = 0; 
-            documents = documents.filter(d => d != 'Thumbs.db');
-            documents.forEach(d => {
-                if(d.includes('power')){
-                    count ++;
+        let localList = getList('H:\\USER\\Jobstudents\\DocumentsList\\' + r);
+        let sftpList = getList('H:\\USER\\Jobstudents\\DocumentsList\\' + r); // TODO: modify this address!
+        Promise.all([localList, sftpList]).then(res =>{
+            res[0].forEach(d => {
+                if (!res[1].includes(d)){
+                    console.log(`one document is not in the SFTP ${d} for the folder ${r}`);
                 }
             })
-            if (documents.length > 3){
-                console.log(`more than expected ${r} - size ${documents.length}`);
-                console.log(documents);
-            }
-            if (count > 1) {
-                console.log('more than one power ' + r);
-            }
         })
     })
 });
