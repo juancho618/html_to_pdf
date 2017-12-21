@@ -4,10 +4,10 @@ const bic = require('bic');
 const json2xls = require('json2xls');
 const fs = require('fs.extra');
 
-const workbook = XLSX.readFile('trucks contracts matrix (mail merge source)30_11.xlsm');
+const workbook = XLSX.readFile('data2.xlsm');
 const sheet_name_list = workbook.SheetNames;
 let xlData = XLSX.utils.sheet_to_json(workbook.Sheets["Tabelle1"]);
-
+// TODO: signed contract conditions ahving all the dates! of both contracts
 let toBePayed = xlData.filter(assignor => {
     if (assignor.hasOwnProperty('IBAN') && assignor.hasOwnProperty('BIC') && (parseInt(assignor.pay_fix) > 0)) {
         if (!assignor.hasOwnProperty('Fixed_part_paid')) {
