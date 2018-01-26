@@ -52,17 +52,17 @@ Promise.all([pdfList]).then( docs =>{
                if (err) throw err;
                const res = results[0];
                if (res > 0.5) {
-                   console.log('corrupted file');
+                   console.log(`${pdf} is a corrupted file`);
                }
                else{
-                   console.log('good file');
+                   console.log(`${pdf} is a good file`);
                }
              });
             if (index == docs[0].length - 1) { 
                 getList('./imgs').then(result =>{
                     setTimeout(() => {
                         result.forEach( file => fs.unlinkSync( './imgs/' + file ));
-                      }, 8000);                    
+                      }, 10000);                    
                 })
             }             
         }) 

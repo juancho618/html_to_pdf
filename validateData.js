@@ -13,6 +13,10 @@ const workbook = XLSX.readFile('trucks contracts matrix (mail merge source).xlsm
 const sheet_name_list = workbook.SheetNames;
 let xlData = XLSX.utils.sheet_to_json(workbook.Sheets["Tabelle1"]);
 
+const workbook2 = XLSX.readFile('newList2.xlsx');
+const sheet_name_list2 = workbook2.SheetNames;
+let xlData2 = XLSX.utils.sheet_to_json(workbook2.Sheets["Sheet 1"]);
+
 // async fs function
 fs.readdirAsync = dirname => {
     return new Promise(function(resolve, reject) {
@@ -25,12 +29,17 @@ fs.readdirAsync = dirname => {
     });
 };
 
-let numbered = xlData.filter(x => x.hasOwnProperty('Assigner_Number_writ'));
+// let numbered = xlData.filter(x => x.hasOwnProperty('Assigner_Number_writ'));
+let numbered = xlData2.filter(x => x.hasOwnProperty('company_name'));
 
 // get list from folder function
 let getList = (path) =>  fs.readdirAsync( path );
 
-const assignorsList = getList('H:\\USER\\Jobstudents\\DocumentsList')
+// const folderPath = 'H:\\USER\\Jobstudents\\DocumentsList\\';
+const folderPath = 'C:\\Users\\Escobar\\Desktop\\newList\\';
+
+const assignorsList = getList(folderPath)
+
 
 let getIdNumber = (id) =>{
     
@@ -49,20 +58,22 @@ let getIdNumber = (id) =>{
 
 
 Promise.all([assignorsList]).then(result =>{
+    console.log(result[0].length)
     let listItems = []; 
     result[0].forEach( (r, index) => {
-       return  getList('H:\\USER\\Jobstudents\\DocumentsList\\' + r).then( documents => {
+       return  getList(folderPath + r).then( documents => {
             const rawId = r.split('-');
-            const idExtract = rawId.length > 3 ? rawId[rawId.length - 1].trim() : rawId[2].trim();
-            const idNumber = getIdNumber(idExtract);
-
+            console.log(rawId);
+            const idExtract = rawId.length >= 3 ? rawId[rawId.length - 1].trim() : rawId[1].trim(); //rawid was 2 for assignor number
+            const idNumber = idExtract; 
             let item = {
                 id: idNumber,
                 power: false,
                 DoT: false,
                 CPA: false, 
                 idType: '',
-                name: ''
+                name: '',
+                Assig_Number_writ: ''
             }
 
             documents.forEach(d => {
@@ -89,6 +100,7 @@ let getItems = (list) => {
             if(data.Ident.includes(assignor.id)){
                 assignor.idType = data.Ident_type;
                 assignor.name = data.company_name;
+                assignor.Assig_Number_writ = data['Assig_Number_writ'];
             }
         })
     })
@@ -96,5 +108,5 @@ let getItems = (list) => {
 
     /* create sheet data & add to workbook for the json file */
     let data =   json2xls(list);
-    fs.writeFileSync('data.xlsx', data, 'binary');
+    fs.writeFileSync('dataRe.xlsx', data, 'binary');
 };
