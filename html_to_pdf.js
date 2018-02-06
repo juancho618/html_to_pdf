@@ -1,7 +1,7 @@
 const fs = require('fs');
 const pdf = require('html-pdf');
 const path = './htmlFiles/';
-const options = { format: 'Letter' };
+const options = { format: 'Legal' };
 
 fs.readdir( path, (err, items) => {
     if (items.length > 0) {

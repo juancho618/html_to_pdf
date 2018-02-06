@@ -1,6 +1,6 @@
 node_modules/
 htmlFiles/  
-pdfFiles/
+pdfFiles/*
 deletedList.csv
 *.xlsx
 *.xlsm

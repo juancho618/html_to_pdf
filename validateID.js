@@ -2,7 +2,7 @@ const path = require('path');
 const fs = require('fs.extra');
 const XLSX = require('xlsx');
 const json2xls = require('json2xls');
-const workbook = XLSX.readFile('trucks contracts matrix (mail merge source).xlsm');
+const workbook = XLSX.readFile('data2.xlsm');
 const sheet_name_list = workbook.SheetNames;
 
 
@@ -21,8 +21,9 @@ fs.readdirAsync = dirname => {
 // get list from folder function
 let getList = (path) =>  fs.readdirAsync( path );
 
-// const powers = getList('H:\\USER\\Jobstudents\\powersList');
-const powers = getList('H:\\USER\\Jobstudents\\DoTs\\Dot_o_Stamped');
+const powers = getList('H:\\USER\\Jobstudents\\powersList'); 
+// const powers = getList('H:\\USER\\Jobstudents\\DoTs\\Dot_o_Stamped');
+//const powers = getList('H:\\USER\\Jobstudents\\CPAs');
 
 
 Promise.all([powers]).then( values =>{

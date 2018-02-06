@@ -6,14 +6,14 @@ const path = require('path');
 const fs = require('fs.extra');
 const XLSX = require('xlsx');
 const json2xls = require('json2xls');
-const workbook = XLSX.readFile('trucks contracts matrix (mail merge source).xlsm');
+const workbook = XLSX.readFile('data2.xlsm');
 const sheet_name_list = workbook.SheetNames;
 let xlData = XLSX.utils.sheet_to_json(workbook.Sheets["Tabelle1"]);
-
 
 const workbook2 = XLSX.readFile('newList2.xlsx');
 const sheet_name_list2 = workbook2.SheetNames;
 let xlData2 = XLSX.utils.sheet_to_json(workbook2.Sheets["Sheet 1"]);
+
 
 
 // async fs function
@@ -77,7 +77,7 @@ Promise.all([CPA, powers, DoTo]).then( values =>{
 
         const extractId = tempId(i.Ident.trim());
         // console.log(`${i.Ident}, ${extractId}`);
-        let missDoc = {target: i.company_name, originalId: i.Ident, usedId: extractId, CPA: true, DOT: true, Power: true, idType: i.Ident_type,cpaMatch: false,dotMatch: false,powerMatch: false}
+        let missDoc = {target: i.company_name, originalId: i.Ident, usedId: extractId, CPA: true, DOT: true, Power: true, idType: i.Ident_type,cpaMatch: false,dotMatch: false,powerMatch: false, Assig_Number_writ: i['Assig_Number_writ']}
 
         if (!fs.existsSync(savePath)){
             fs.mkdirSync(savePath);

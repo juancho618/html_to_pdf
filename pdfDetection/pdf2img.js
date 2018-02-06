@@ -52,7 +52,7 @@ Promise.all([pdfList]).then( docs =>{
                if (err) throw err;
                const res = results[0];
                if (res > 0.5) {
-                   console.log(`${pdf} is a corrupted file`);
+                   console.error(`${pdf} is a corrupted file!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!`);
                }
                else{
                    console.log(`${pdf} is a good file`);
