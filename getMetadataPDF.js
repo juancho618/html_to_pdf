@@ -6,13 +6,14 @@ module.exports = {
         return PDFJS.getDocument(filePath).then(function (pdfDoc_) {
             pdfDoc = pdfDoc_;   
             return pdfDoc.getMetadata().then(function(data) {
-                if (data.metadata.hasOwnProperty('_metadata')) {
-                    if (data.metadata._metadata['pdfaid:conformance'] && data.metadata._metadata['pdfaid:conformance'] == 'A' ){
-                        return true
+                if (data && data.metadata){
+                    if ( data.metadata.hasOwnProperty('_metadata')) {
+                        if (data.metadata._metadata['pdfaid:conformance'] && data.metadata._metadata['pdfaid:conformance'] == 'A' ){
+                            return true
+                        }
                     }
-                }
+                 }
                 return false
-                console.log(data.metadata._metadata['pdfaid:conformance']); // Metadata object here
             }).catch(function(err) {
                console.log('Error getting meta data');
                console.error(err);

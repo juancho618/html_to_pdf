@@ -17,18 +17,49 @@ fs.readdirAsync = dirname => {
 };
 
 // get list from folder function
-let getList = (path) =>  fs.readdirAsync( path );
+let getList = (pathList) =>  fs.readdirAsync( pathList );
 
-const powers = getList('H:\\USER\\Jobstudents\\convertedFiles\\power');
+const powers = getList('C:\\Users\\Escobar\\Desktop\\convertedFiles\\power');
 
-const res = getMetadata.getPDFAMetadata('./Albert Frei,IT_00373790211_DoT_EN_o_stamped.pdf');
-res.then(x => console.log(x));
-console.log(getText.containText('./HR-Auszug_Bertschi Italia_VISURA.pdf'));
-// Promise.all([powers]).then( values =>{
 
-//      // For each power
-//      values[0].forEach(d => {
+
+let ocrList = [];
+let pdfAList = [];
+
+//Callback function to add documenta to the OCR list
+let addOCR = (document, value) => {
+    ocrList.push({
+        Document: document,
+        OCR: value
+    });
+}
+let count = 0;
+Promise.all([powers]).then( values =>{
+
+     // For each power
+     values[0].forEach((d) => {
+        let pathDoc = `C:\\Users\\Escobar\\Desktop\\convertedFiles\\power\\${d}`;
+        //save PDF/A
+        if (d != 'Thumbs.db') {
+        //     let res = getMetadata.getPDFAMetadata(pathDoc);
+        //     res.then(x => {pdfAList.push({
+        //             Document: d,
+        //             PDFA: x
+        //         });
+        //         count ++;
+        //         if (count == values[0].length - 1){
+        //             let data =   json2xls(pdfAList);
+        //             fs.writeFileSync('pdfaList.xlsx', data, 'binary');
+        //         }
+        // });
+            getText.containText(pathDoc, addOCR);
+        }
         
-//     })
+        //getText.containText(pathDoc, addOCR);
 
-// });
+    })
+
+    
+    // console.log('list2', ocrList);
+
+});
