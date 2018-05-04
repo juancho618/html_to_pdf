@@ -19,7 +19,7 @@ fs.readdirAsync = dirname => {
 // get list from folder function
 let getList = (pathList) => fs.readdirAsync(pathList);
 
-const powers = getList('C:\\Users\\Escobar\\Desktop\\convertedFiles\\power');
+const powers = getList('C:\\Users\\Escobar\\Desktop\\powersList');
 
 
 
@@ -33,7 +33,7 @@ Promise.all([powers]).then(values => {
 
     // For each power
     values[0].forEach((d) => {
-        let pathDoc = `C:\\Users\\Escobar\\Desktop\\convertedFiles\\power\\${d}`;
+        let pathDoc = `C:\\Users\\Escobar\\Desktop\\powersList\\${d}`;
         //save PDF/A
         if (d != 'Thumbs.db') {
             // Get the metadata from the Pdf File

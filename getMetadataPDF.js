@@ -1,6 +1,5 @@
 
 require('pdfjs-dist');
-
 module.exports = {
     getPDFAMetadata: (filePath) => {
         return PDFJS.getDocument(filePath).then(function (pdfDoc_) {
