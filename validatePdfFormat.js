@@ -19,7 +19,7 @@ fs.readdirAsync = dirname => {
 // get list from folder function
 let getList = (pathList) => fs.readdirAsync(pathList);
 
-const powers = getList('C:\\Users\\Escobar\\Desktop\\powersList');
+const powers = getList('C:\\Users\\Escobar\\Desktop\\cpaList');
 
 
 
@@ -33,7 +33,7 @@ Promise.all([powers]).then(values => {
 
     // For each power
     values[0].forEach((d) => {
-        let pathDoc = `C:\\Users\\Escobar\\Desktop\\powersList\\${d}`;
+        let pathDoc = `C:\\Users\\Escobar\\Desktop\\cpaList\\${d}`;
         //save PDF/A
         if (d != 'Thumbs.db') {
             // Get the metadata from the Pdf File
@@ -61,7 +61,7 @@ Promise.all([powers]).then(values => {
                     count2++;
                     if (count2 == values[0].length - 1) {
                         let data = json2xls(ocrList);
-                        fs.writeFileSync('ocrList.xlsx', data, 'binary');
+                        fs.writeFileSync('ocrListCPA.xlsx', data, 'binary');
                     }
                 })
             });

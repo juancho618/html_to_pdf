@@ -17,11 +17,11 @@ const path = require('path');
     };
 
     const workbook2 = XLSX.readFile(`C:\\Users\\Escobar\\Documents\\cdcAPP\\data\\newList2.xlsx`);
-        const sheet_name_list2 = workbook2.SheetNames;
-        let xlData2 = XLSX.utils.sheet_to_json(workbook2.Sheets["Sheet 1"]);
+    const sheet_name_list2 = workbook2.SheetNames;
+    let xlData2 = XLSX.utils.sheet_to_json(workbook2.Sheets["Sheet 1"]);
 
-           // get list from folder function
-           let getList = (path) =>  fs.readdirAsync( path );
+    // get list from folder function
+    let getList = (path) =>  fs.readdirAsync( path );
 
 
                 //Load sources
@@ -57,7 +57,6 @@ const path = require('path');
 
                 values[0].forEach(d => {
                     if (d.includes(extractId)) {
-                        console.log('hola');
                         fs.copy( 'H:\\USER\\Jobstudents\\powersList'+'/'+d, 'H:\\USER\\Jobstudents\\toBeConverted\\extra\\power'+'/'+d, { replace: false });
                     }
                 })

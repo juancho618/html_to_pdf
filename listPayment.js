@@ -9,12 +9,13 @@ const sheet_name_list = workbook.SheetNames;
 let xlData = XLSX.utils.sheet_to_json(workbook.Sheets["Tabelle1"]);
 // TODO: signed contract conditions ahving all the dates! of both contracts
 let toBePayed = xlData.filter(assignor => {
-    if (assignor.hasOwnProperty('IBAN') && assignor.hasOwnProperty('BIC') && (parseInt(assignor.pay_fix) > 0 && assignor.hasOwnProperty('Assig_Number_writ') && assignor.Assig_Number_writ != 0)) {
-        if (!assignor.hasOwnProperty('Fixed_part_paid')) {
-            return assignor;
-        }else if (assignor.Fixed_part_paid.toUpperCase().trim() != 'YES'){
-            return assignor;
-        }
+    if (assignor.hasOwnProperty('IBAN') && assignor.hasOwnProperty('BIC') && (parseInt(assignor.pay_fix) > 0 )) { //&& assignor.hasOwnProperty('Assig_Number_writ') && assignor.Assig_Number_writ != 0
+       return assignor;
+        // if (!assignor.hasOwnProperty('Fixed_part_paid')) {
+        //     return assignor;
+        // }else if (assignor.Fixed_part_paid.toUpperCase().trim() != 'YES'){
+        //     return assignor;
+        // }
     }
 });
 
@@ -25,7 +26,8 @@ let validPayment = toBePayed.filter(a => IBAN.isValid(a.IBAN.trim()) && bic.isVa
     IBAN: item.IBAN,
     BIC: item.BIC,
     pay_fix: item.pay_fix,
-    email: item.Email || item.Email2
+    email: item.Email || item.Email2,
+    
 }));
 let invalidIBAN = toBePayed.filter(a => !IBAN.isValid(a.IBAN.trim())).map( item => ({
     assignorNumber: item.Assig_Number_writ,
@@ -35,7 +37,8 @@ let invalidIBAN = toBePayed.filter(a => !IBAN.isValid(a.IBAN.trim())).map( item 
     BIC: item.BIC,
     pay_fix: item.pay_fix,
     email: item.Email || item.Email2,
-    error_type: 'Invalid IBAN'
+    error_type: 'Invalid IBAN',
+    Fixed_part_paid: item.Fixed_part_paid || 'NO'
 }));
 let invalidIBIC = toBePayed.filter(a => !bic.isValid(a.BIC.trim())).map( item => ({
     company: item.company_name,

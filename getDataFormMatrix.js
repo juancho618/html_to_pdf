@@ -3,7 +3,7 @@
  */
 
 const path = require('path');
-const { join } = require('path')
+const { join } = require('path');
 const fs = require('fs.extra');
 const XLSX = require('xlsx');
 const json2xls = require('json2xls');
@@ -61,6 +61,7 @@ const DoT = getList('H:\\USER\\Jobstudents\\Trucks\\DoTs\\DoT_2sig_Stamped'); //
 const DoTo = getList('H:\\USER\\Jobstudents\\Trucks\\DoTs\\Dot_o_Stamped');
 const powers = getList('H:\\USER\\Jobstudents\\Trucks\\powersList');
 const preAssigments = getList('H:\\USER\\Jobstudents\\Trucks\\pre-assignments');
+
 // const HtmltoPDF = getList('H:\\USER\\Jobstudents\\powers\\HtmltoPDF');
 // const ocrError = getList('H:\\USER\\Jobstudents\\powers\\OCR-PDF-A\\error');
 // const ocrGodd =  getList('H:\\USER\\Jobstudents\\powers\\OCR-PDF-A\\good');
@@ -192,7 +193,7 @@ Promise.all([CPA, powers, DoTo, preAssigments, DoT]).then( values =>{
             target: pre.company_name, originalId: pre.Ident, 
             usedId: extractId, CPA: true, 
             DOT: true, Power: true, 
-            Preassigment: 'N/A', predType: pre.Ident_type,cpaMatch: false,dotMatch: false,powerMatch: false, preassigmentMatch: false,
+            Preassigment: 'N/A', idType: pre.Ident_type,cpaMatch: false,dotMatch: false,powerMatch: false, preassigmentMatch: false,
             Assig_Number_writ: pre['Assig_Number_writ'],
             Assignor_Number: pre['Assignor_Number'],
             isPreassignor: true};
