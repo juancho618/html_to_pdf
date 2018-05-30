@@ -3,13 +3,14 @@
  */
 
 const path = require('path');
+const { join } = require('path')
 const fs = require('fs.extra');
 const XLSX = require('xlsx');
 const json2xls = require('json2xls');
 const workbook = XLSX.readFile('data2.xlsm');
 const sheet_name_list = workbook.SheetNames;
 let xlData = XLSX.utils.sheet_to_json(workbook.Sheets["Tabelle1"]);
-const { lstatSync, readdirSync } = require('fs');
+const { lstatSync, readdirSync, statSync  } = require('fs');
 
 const workbook2 = XLSX.readFile('newListNumber.xlsx');
 const sheet_name_list2 = workbook2.SheetNames;
@@ -51,8 +52,9 @@ let getList = (path) =>  fs.readdirAsync( path );
 
 //To get the list of the directories inside of a directory
 const isDirectory = source => lstatSync(source).isDirectory()
-const getDirectories = source =>
-  readdirSync(source).map(name => join(source, name)).filter(isDirectory)
+const getDirectories = source =>  readdirSync(source).map(name => join(source, name)).filter(isDirectory)
+//new dir method
+const dirs = p => readdirSync(p).filter(f => statSync(join(p, f)).isDirectory())
 
 const CPA = getList('H:\\USER\\Jobstudents\\Trucks\\CPAs');
 const DoT = getList('H:\\USER\\Jobstudents\\Trucks\\DoTs\\DoT_2sig_Stamped'); //Not included for now
@@ -70,7 +72,8 @@ let assignors = [];
 let preassignors = []; 
 let isPreassignor = false;
 
-Promise.all([CPA, powers, DoTo, preAssigments]).then( values =>{
+
+Promise.all([CPA, powers, DoTo, preAssigments, DoT]).then( values =>{
     // creating the folders
     const destination = 'C:\\Users\\Escobar\\Desktop\\newList2'; //'H:\\USER\\Jobstudents\\DocumentsList'
     
@@ -101,7 +104,13 @@ Promise.all([CPA, powers, DoTo, preAssigments]).then( values =>{
             const savePath = `${destination}/${i.Assignor_Number} - ${i.company_name} - ${i.Ident}`; //${i['Assigner_Number_writ ']} -
             const extractId = tempId(i.Ident.trim());
 
-            let missDoc = {target: i.company_name, originalId: i.Ident, usedId: extractId, CPA: true, DOT: true, Power: true, idType: i.Ident_type,cpaMatch: false,dotMatch: false,powerMatch: false, Assig_Number_writ: i['Assig_Number_writ']}
+            let missDoc = {target: i.company_name, 
+                originalId: i.Ident, usedId: extractId, 
+                CPA: true, DOT: true, Power: true, Preassigment: 'N/A', 
+                idType: i.Ident_type,cpaMatch: false,dotMatch: false,powerMatch: false, preassigmentMatch: false, 
+                Assig_Number_writ: i['Assig_Number_writ'], 
+                Assignor_Number: i['Assignor_Number'],
+                isPreassignor: false}
 
             if (!fs.existsSync(savePath)){
                 fs.mkdirSync(savePath);
@@ -124,7 +133,7 @@ Promise.all([CPA, powers, DoTo, preAssigments]).then( values =>{
                     fs.copy('H:\\USER\\Jobstudents\\Trucks\\powersList' + '/' + d, `${savePath}/${d}`, { replace: false });
                     documentsFound.push('Power');
                 }
-                else if (d.includes(i.company_name)){
+                else if (d.includes(i.company_name)){ //Could not be find by ID but it is present with the company name
                     missDoc.powerMatch = true;
                     suspiciousFiles.push({file: d,type:'Powers',  target: i.company_name, originalId: i.Ident, usedId: extractId});
                 }
@@ -134,6 +143,18 @@ Promise.all([CPA, powers, DoTo, preAssigments]).then( values =>{
             values[2].forEach(d => {
                 if (d.includes(extractId)) {
                     fs.copy('H:\\USER\\Jobstudents\\Trucks\\DoTs\\Dot_o_Stamped' + '/' + d, `${savePath}/${d}`, { replace: false });
+                    documentsFound.push('DOT');
+                }
+                else if (d.includes(i.company_name)){
+                    missDoc.dotMatch = true;
+                    suspiciousFiles.push({file: d,type:'DOT',  target: i.company_name, originalId: i.Ident, usedId: extractId});
+                }
+            })
+
+            // DoT_2sig_stamped
+            values[4].forEach(d => {
+                if (d.includes(extractId)) {
+                    fs.copy('H:\\USER\\Jobstudents\\Trucks\\DoTs\\DoT_2sig_Stamped' + '/' + d, `${savePath}/${d}`, { replace: false });
                     documentsFound.push('DOT');
                 }
                 else if (d.includes(i.company_name)){
@@ -156,63 +177,84 @@ Promise.all([CPA, powers, DoTo, preAssigments]).then( values =>{
 
         }    
     })
-
+    
     //Once all teh assignors are processed the Idea is to process the pre-assignors
     preassignors.forEach(pre => {
+        let documentsFound = [];
         console.log('pre', pre.company_name);
         const extractId = tempId(pre.Ident.trim());
-        const preAssignorId = tempId(pre.pre_assig_of.trim());
-        //const directoriesList = getDirectories(`${destination}`);
-        // console.log('list of directories', directoriesList);
-        // const parentDir = directoriesList.filter(dir => dir.includes(preAssignorId));
-        // Promise.all([powers, preAssigments]).then(v=>{
+        const AssignorId = tempId(pre.pre_assig_of.trim()); //Main assignor Id
+        const directoriesList = dirs(`${destination}`);
+        const parentDir = directoriesList.filter(dir => dir.includes(AssignorId));
+        console.log(parentDir);
 
-        //     // Preassignor power
-        //     v[0].forEach(d => {
-        //         if (d.includes(extractId)) {
-        //             fs.copy('H:\\USER\\Jobstudents\\Trucks\\powersList' + '/' + d, `${savePath}/${d}`, { replace: false });
-        //             documentsFound.push('Power');
-        //         }
-        //         else if (d.includes(pre.company_name)){
-        //             missDoc.powerMatch = true;
-        //             suspiciousFiles.push({file: d,type:'Powers -preAssignor',  target: pre.company_name, originalId: pre.Ident, usedId: extractId});
-        //         }
-        //     })
+        let missDoc = {
+            target: pre.company_name, originalId: pre.Ident, 
+            usedId: extractId, CPA: true, 
+            DOT: true, Power: true, 
+            Preassigment: 'N/A', predType: pre.Ident_type,cpaMatch: false,dotMatch: false,powerMatch: false, preassigmentMatch: false,
+            Assig_Number_writ: pre['Assig_Number_writ'],
+            Assignor_Number: pre['Assignor_Number'],
+            isPreassignor: true};
 
-        //     //For the preassigments
-        //     v[1].forEach(d => {
-        //         if (d.includes(extractId)) {
-        //             fs.copy('H:\\USER\\Jobstudents\\Trucks\\pre-assignments' + '/' + d, `${parentDir}/${d}`, { replace: false });
-        //             documentsFound.push('Preassigment');
-        //         }
-        //         else if (d.includes(pre.company_name)){
-        //             missDoc.cpaMatch = true;
-        //             suspiciousFiles.push({file: d,type:'preassigment', target: pre.company_name, originalId: pre.Ident, usedId: extractId});
-        //         }
-        //     })
+        Promise.all([powers, preAssigments]).then(v=>{
 
-        // })
+            // Preassignor power
+            v[0].forEach(d => {
+                if (d.includes(extractId)) {
+                    fs.copy('H:\\USER\\Jobstudents\\Trucks\\powersList' + '/' + d, `${destination}/${parentDir}/${d}`, { replace: false });
+                    documentsFound.push('Power');
+                }
+                else if (d.includes(pre.company_name)){
+                    missDoc.powerMatch= true;
+                    suspiciousFiles.push({file: d,type:'Powers-preAssignor',  target: pre.company_name, originalId: pre.Ident, usedId: extractId});
+                }
+            })
+            
+            //For the preassigments
+            v[1].forEach(d => {
+                if (d.includes(extractId)) {
+                    fs.copy('H:\\USER\\Jobstudents\\Trucks\\pre-assignments' + '/' + d, `${destination}/${parentDir}/${d}`, { replace: false });
+                    documentsFound.push('Preassigment');
+                }
+                else if (d.includes(pre.company_name)){
+                    missDoc.preassigmentMatch = true;
+                    suspiciousFiles.push({file: d,type:'preassigment', target: pre.company_name, originalId: pre.Ident, usedId: extractId});
+                }
+            })
+
+            //Add validation for missing documents for the pre-Assignor
+            if ( !documentsFound.includes('Preassigment') || !documentsFound.includes('Power')){
+                
+                if (!documentsFound.includes('Preassigment'))
+                    missDoc.Preassigment = false;
+                if (!documentsFound.includes('Power'))
+                    missDoc.Power = false;
+                missing.push(missDoc);
+            }
+
+            //TO BE REFACTORED!!!
+            console.log('Total Number Pre-Assignors', preassignors.length );
+            console.log('Total Number Assignors', assignors.length);
+
+            const assignorsList = json2xls(assignors);
+            const preassignorsList = json2xls(preassignors);
+            fs.writeFileSync('assignorsList.xlsx', assignorsList, 'binary');
+            fs.writeFileSync('preassignorsList.xlsx', preassignorsList, 'binary');
+
+            /* create sheet data & add to workbook for the json file */
+            let data =   json2xls(suspiciousFiles);
+            fs.writeFileSync('secondList.xlsx', data, 'binary');
+
+            /* create sheet data & add to workbook for the json file */
+            let datam =   json2xls(missing);
+            fs.writeFileSync('missigList.xlsx', datam, 'binary');
+        })
         
 
     });
         
-
-    console.log('Total Number Pre-Assignors', preassignors.length, );
-    console.log('Total Number Assignors', assignors.length);
-
-    /*creates an excel file with the assignors and another one with the assignors*/
-    const assignorsList = json2xls(assignors);
-    const preassignorsList = json2xls(preassignors);
-    fs.writeFileSync('assignorsList.xlsx', assignorsList, 'binary');
-    fs.writeFileSync('preassignorsList.xlsx', preassignorsList, 'binary');
-
-    /* create sheet data & add to workbook for the json file */
-    let data =   json2xls(suspiciousFiles);
-    fs.writeFileSync('secondList.xlsx', data, 'binary');
-
-    /* create sheet data & add to workbook for the json file */
-    let datam =   json2xls(missing);
-    fs.writeFileSync('missigList.xlsx', datam, 'binary');
+   
     
     
 
