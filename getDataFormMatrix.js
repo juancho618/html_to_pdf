@@ -110,7 +110,8 @@ Promise.all([CPA, powers, DoTo, preAssigments, DoT]).then( values =>{
                 idType: i.Ident_type,cpaMatch: false,dotMatch: false,powerMatch: false, preassigmentMatch: false, 
                 Assig_Number_writ: i['Assig_Number_writ'], 
                 Assignor_Number: i['Assignor_Number'],
-                isPreassignor: false}
+                isPreassignor: false,
+                company_form: i.Company_form}
 
             if (!fs.existsSync(savePath)){
                 fs.mkdirSync(savePath);
@@ -195,7 +196,9 @@ Promise.all([CPA, powers, DoTo, preAssigments, DoT]).then( values =>{
             Preassigment: 'N/A', predType: pre.Ident_type,cpaMatch: false,dotMatch: false,powerMatch: false, preassigmentMatch: false,
             Assig_Number_writ: pre['Assig_Number_writ'],
             Assignor_Number: pre['Assignor_Number'],
-            isPreassignor: true};
+            isPreassignor: true,
+            company_form: pre.Company_form
+        };
 
         Promise.all([powers, preAssigments]).then(v=>{
 
