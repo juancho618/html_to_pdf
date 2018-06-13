@@ -36,9 +36,9 @@ let numbered = xlData2.filter(x => x.hasOwnProperty('company_name'));
 let getList = (path) =>  fs.readdirAsync( path );
 
 // const folderPath = 'H:\\USER\\Jobstudents\\DocumentsList\\';
-const folderPath = 'C:\\Users\\Escobar\\Desktop\\newList\\';
+const folderPath = 'C:\\Users\\Escobar\\Desktop\\newList2\\';
 
-const assignorsList = getList(folderPath)
+const assignorsList = getList(folderPath);
 
 
 let getIdNumber = (id) =>{

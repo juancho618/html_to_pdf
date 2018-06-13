@@ -3,7 +3,7 @@
  */
 
 const path = require('path');
-const { join } = require('path')
+const { join } = require('path');
 const fs = require('fs.extra');
 const XLSX = require('xlsx');
 const json2xls = require('json2xls');
@@ -119,7 +119,7 @@ Promise.all([CPA, powers, DoTo, preAssigments, DoT]).then( values =>{
             // CPA
             values[0].forEach(d => {
                 if (d.includes(extractId)) {
-                    fs.copy('H:\\USER\\Jobstudents\\Trucks\\CPAs' + '/' + d, `${savePath}/${d}`, { replace: false });
+                    fs.copy('H:\\USER\\Jobstudents\\Trucks\\CPAs' + '/' + d, `${savePath}/${d}`, { replace: true });
                     documentsFound.push('CPA');
                 }
                 else if (d.includes(i.company_name)){
@@ -131,7 +131,7 @@ Promise.all([CPA, powers, DoTo, preAssigments, DoT]).then( values =>{
             // Powers
             values[1].forEach(d => {
                 if (d.includes(extractId)) {
-                    fs.copy('H:\\USER\\Jobstudents\\Trucks\\powersList' + '/' + d, `${savePath}/${d}`, { replace: false });
+                    fs.copy('H:\\USER\\Jobstudents\\Trucks\\powersList' + '/' + d, `${savePath}/${d}`, { replace: true });
                     documentsFound.push('Power');
                 }
                 else if (d.includes(i.company_name)){ //Could not be find by ID but it is present with the company name
@@ -143,7 +143,7 @@ Promise.all([CPA, powers, DoTo, preAssigments, DoT]).then( values =>{
             // DoT_o_Stamped
             values[2].forEach(d => {
                 if (d.includes(extractId)) {
-                    fs.copy('H:\\USER\\Jobstudents\\Trucks\\DoTs\\Dot_o_Stamped' + '/' + d, `${savePath}/${d}`, { replace: false });
+                    fs.copy('H:\\USER\\Jobstudents\\Trucks\\DoTs\\Dot_o_Stamped' + '/' + d, `${savePath}/${d}`, { replace: true });
                     documentsFound.push('DOT');
                 }
                 else if (d.includes(i.company_name)){
@@ -155,7 +155,7 @@ Promise.all([CPA, powers, DoTo, preAssigments, DoT]).then( values =>{
             // DoT_2sig_stamped
             values[4].forEach(d => {
                 if (d.includes(extractId)) {
-                    fs.copy('H:\\USER\\Jobstudents\\Trucks\\DoTs\\DoT_2sig_Stamped' + '/' + d, `${savePath}/${d}`, { replace: false });
+                    fs.copy('H:\\USER\\Jobstudents\\Trucks\\DoTs\\DoT_2sig_Stamped' + '/' + d, `${savePath}/${d}`, { replace: true });
                     documentsFound.push('DOT');
                 }
                 else if (d.includes(i.company_name)){
@@ -205,7 +205,7 @@ Promise.all([CPA, powers, DoTo, preAssigments, DoT]).then( values =>{
             // Preassignor power
             v[0].forEach(d => {
                 if (d.includes(extractId)) {
-                    fs.copy('H:\\USER\\Jobstudents\\Trucks\\powersList' + '/' + d, `${destination}/${parentDir}/${d}`, { replace: false });
+                    fs.copy('H:\\USER\\Jobstudents\\Trucks\\powersList' + '/' + d, `${destination}/${parentDir}/${d}`, { replace: true });
                     documentsFound.push('Power');
                 }
                 else if (d.includes(pre.company_name)){
@@ -217,7 +217,7 @@ Promise.all([CPA, powers, DoTo, preAssigments, DoT]).then( values =>{
             //For the preassigments
             v[1].forEach(d => {
                 if (d.includes(extractId)) {
-                    fs.copy('H:\\USER\\Jobstudents\\Trucks\\pre-assignments' + '/' + d, `${destination}/${parentDir}/${d}`, { replace: false });
+                    fs.copy('H:\\USER\\Jobstudents\\Trucks\\pre-assignments' + '/' + d, `${destination}/${parentDir}/${d}`, { replace: true });
                     documentsFound.push('Preassigment');
                 }
                 else if (d.includes(pre.company_name)){
